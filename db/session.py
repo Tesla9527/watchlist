@@ -1,13 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-
-
-# 指定生成在 databases 目录下
-SQLALCHEMY_DATABASE_URL = "sqlite:///./databases/test.db"
+from core.config import settings
 
 # 创建一个数据库引擎，用于连接到 SQLite 数据库
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(settings.SQLALCHEMY_DATABASE_URL)
 
 # 创建一个会话生成器，用于生成数据库会话
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

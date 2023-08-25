@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from databases.sqlite_db import Base
+from db.session import Base
 
 
 class Movie(Base):

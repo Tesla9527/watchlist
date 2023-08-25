@@ -17,5 +17,8 @@ class Config(BaseSettings):
     STATIC_DIR: str = os.path.join(os.getcwd(), "../static")
     TEMPLATE_DIR: str = os.path.join(STATIC_DIR, "templates")
 
+    # 数据库地址
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./db/test.db"
+
 
 settings = Config()
