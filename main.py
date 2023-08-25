@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn
-from config import settings
+from core.config import settings
 from api.api import api_router
 
 # FastAPI实例
