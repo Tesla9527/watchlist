@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from pydantic_settings import BaseSettings
 from typing import List
+import os
 
 
 class Config(BaseSettings):
@@ -14,11 +15,12 @@ class Config(BaseSettings):
     PROJECT_NAME: str = "watchlist"
     DESCRIPTION: str = '<a href="/redoc" target="_blank">redoc</a>'
     # 静态资源目录
+    PROJECT_ROOT: str = os.path.abspath(os.path.dirname(__file__))
     STATIC_DIR: str = os.path.join(os.getcwd(), "../static")
     TEMPLATE_DIR: str = os.path.join(STATIC_DIR, "templates")
 
     # 数据库地址
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./db/test.db"
+    SQLALCHEMY_DATABASE_URI: str = "sqlite:///test.db"
 
 
 settings = Config()

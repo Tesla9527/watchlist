@@ -1,10 +1,8 @@
 from sqlalchemy import Column, Integer, String
-from db.session import Base
+from db.base_class import Base
 
 
 class Movie(Base):
-    __tablename__ = "movies"
-
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    year = Column(Integer)
+    title = Column(String(60))
+    year = Column(String(4))
