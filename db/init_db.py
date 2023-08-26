@@ -4,6 +4,7 @@
 from session import engine, SessionLocal
 from db.base_class import Base
 from models.movie import Movie
+from models.user import User
 
 
 def initialize_database():
@@ -30,7 +31,14 @@ def insert_initial_data():
         movie = Movie(**data)
         db.add(movie)
     db.commit()
-    print('Initial data inserted')
+    print('Initial movie data inserted')
+
+    user = User()
+    user.name = 'admin'
+    user.set_password('123456')
+    db.add(user)
+    db.commit()
+    print('Initial user data inserted')
 
 
 if __name__ == "__main__":
