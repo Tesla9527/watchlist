@@ -3,7 +3,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 from core.config import settings
-from api.routers import api_router
 from view.routers import view_router
 from core import events
 
@@ -19,7 +18,6 @@ app.add_event_handler("startup", events.startup(app))
 app.add_event_handler("shutdown", events.stopping(app))
 
 # 添加路由
-app.include_router(api_router)
 app.include_router(view_router)
 
 # 静态资源目录
