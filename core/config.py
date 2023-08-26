@@ -19,7 +19,7 @@ class Config(BaseSettings):
     TEMPLATE_DIR: str = os.path.join(STATIC_DIR, "templates")
 
     # 数据库地址
-    SQLALCHEMY_DATABASE_URI: str = "sqlite:///test.db"
+    SQLALCHEMY_DATABASE_URI: str = "sqlite:///./db/test.db"
 
 
 settings = Config()
