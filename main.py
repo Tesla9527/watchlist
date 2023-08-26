@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 from core.config import settings
 from api.routers import api_router
-from views.views import views_router
+from view.routers import view_router
 from core import events
 
 # FastAPI实例
@@ -20,7 +20,7 @@ app.add_event_handler("shutdown", events.stopping(app))
 
 # 添加路由
 app.include_router(api_router)
-app.include_router(views_router)
+app.include_router(view_router)
 
 # 静态资源目录
 app.mount('/static', StaticFiles(directory=settings.STATIC_DIR), name="static")
