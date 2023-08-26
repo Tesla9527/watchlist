@@ -15,8 +15,7 @@ class Config(BaseSettings):
     PROJECT_NAME: str = "watchlist"
     DESCRIPTION: str = '<a href="/redoc" target="_blank">redoc</a>'
     # 静态资源目录
-    PROJECT_ROOT: str = os.path.abspath(os.path.dirname(__file__))
-    STATIC_DIR: str = os.path.join(os.getcwd(), "../static")
+    STATIC_DIR: str = os.path.join(os.getcwd(), "static")
     TEMPLATE_DIR: str = os.path.join(STATIC_DIR, "templates")
 
     # 数据库地址
