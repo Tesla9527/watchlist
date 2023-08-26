@@ -2,8 +2,7 @@
 视图路由
 """
 from fastapi import APIRouter
-from view.endpoints import home
+from view.endpoints import index
 
 view_router = APIRouter()
-
-view_router.include_router(home.router)
+view_router.include_router(index.router, prefix='', tags=["电影管理"])

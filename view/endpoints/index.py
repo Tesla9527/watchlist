@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session
 router = APIRouter()
 
 
-@router.get("/", tags=["门户首页"], response_class=HTMLResponse)
-async def home(request: Request, db: Session = Depends(get_db)):
+@router.get("/", response_class=HTMLResponse)
+async def index(request: Request, db: Session = Depends(get_db)):
     """
-    门户首页
+    首页
     :param db:
     :param request:
     :return:
