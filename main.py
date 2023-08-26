@@ -29,3 +29,5 @@ app.state.views = Jinja2Templates(directory=settings.TEMPLATE_DIR)
 # 启动
 if __name__ == '__main__':
     uvicorn.run('main:app', reload=True, port=9527)
+
+
