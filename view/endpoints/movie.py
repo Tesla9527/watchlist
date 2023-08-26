@@ -11,8 +11,10 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def index(req: Request, db: Session = Depends(get_db)):
     user = {'name': 'Tesla Lau'}
+    message = "Welcome to FastAPI!"
     movies = db.query(Movie).all()
-    return req.app.state.views.TemplateResponse("index.html", {"request": req, "user": user, "movies": movies})
+    return req.app.state.views.TemplateResponse("index.html",
+                                                {"request": req, "user": user, "movies": movies, "message": message})
 
 
 @router.post("/movies/create/")
