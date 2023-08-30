@@ -5,6 +5,7 @@ import uvicorn
 from core.config import settings
 from view.routers import view_router
 from core import events
+from fastapi.middleware.cors import CORSMiddleware
 
 # FastAPI实例
 app = FastAPI(
@@ -16,6 +17,13 @@ app = FastAPI(
 # 事件监听
 app.add_event_handler("startup", events.startup(app))
 app.add_event_handler("shutdown", events.stopping(app))
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Update this with the actual list of allowed origins
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 添加路由
 app.include_router(view_router)
