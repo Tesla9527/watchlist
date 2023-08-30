@@ -1,19 +1,16 @@
-from fastapi import Request, APIRouter, Depends, Form, HTTPException, responses, status
+from fastapi import Request, APIRouter, Depends, Form, responses, status
 from fastapi.responses import RedirectResponse
-from fastapi.responses import HTMLResponse
 from models.user import User
 from db.session import get_db
 from sqlalchemy.orm import Session
 from core.auth import create_access_token
-from core.config import settings
-from models.movie import Movie
 
 router = APIRouter()
 
 
 @router.get('/login')
-def login(req: Request):
-    user = {'name': 'Tesla Lau'}
+def login(req: Request, db: Session = Depends(get_db)):
+    user = db.query(User).first()
     return req.app.state.views.TemplateResponse("login.html", {"request": req, "user": user})
 
 
@@ -33,3 +30,11 @@ def login(req: Request, username: str = Form(...), password: str = Form(...), db
         else:
             print('用户名或密码错误')
             return RedirectResponse(url="/login", status_code=303)
+
+
+@router.get('/logout')
+def logout():
+    print('退出登录,bye bye!')
+    response = responses.RedirectResponse("/", status_code=status.HTTP_302_FOUND)
+    response.delete_cookie("access_token")
+    return response
