@@ -4,6 +4,7 @@ from models.user import User
 from db.session import get_db
 from sqlalchemy.orm import Session
 from core.auth import create_access_token
+from core import global_vars
 
 router = APIRouter()
 
@@ -23,6 +24,7 @@ def login(req: Request, username: str = Form(...), password: str = Form(...), db
         user = db.query(User).filter(User.name == username).first()
         if user and user.validate_password(password):
             print('认证通过')
+            global_vars.message = '登录成功'
             jwt_token = create_access_token(data={'name': username})
             response = responses.RedirectResponse("/", status_code=status.HTTP_302_FOUND)
             response.set_cookie(key="access_token", value=f"{jwt_token}", httponly=True)
@@ -35,6 +37,7 @@ def login(req: Request, username: str = Form(...), password: str = Form(...), db
 @router.get('/logout')
 def logout():
     print('退出登录,bye bye!')
+    global_vars.message = '退出登录,bye bye!'
     response = responses.RedirectResponse("/", status_code=status.HTTP_302_FOUND)
     response.delete_cookie("access_token")
     return response

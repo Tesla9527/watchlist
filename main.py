@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from core.config import settings
 from view.routers import view_router
 from core import events
-from fastapi.middleware.cors import CORSMiddleware
+
 
 # FastAPI实例
 app = FastAPI(
@@ -20,7 +21,7 @@ app.add_event_handler("shutdown", events.stopping(app))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Update this with the actual list of allowed origins
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

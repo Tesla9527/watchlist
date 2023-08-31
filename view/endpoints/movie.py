@@ -6,6 +6,7 @@ from models.user import User
 from db.session import get_db
 from sqlalchemy.orm import Session
 from core.auth import decode_access_token
+from core import global_vars
 
 router = APIRouter()
 
@@ -26,8 +27,15 @@ async def index(req: Request, current_user: dict = Depends(get_current_user_from
 
     user = db.query(User).first()
     movies = db.query(Movie).all()
-    return req.app.state.views.TemplateResponse("index.html", {"request": req, "user": user, "movies": movies,
-                                                               "is_authenticated": is_authenticated})
+    flash_message = global_vars.message
+    global_vars.message = ''
+    return req.app.state.views.TemplateResponse("index.html", {
+        "request": req,
+        "user": user,
+        "movies": movies,
+        "is_authenticated": is_authenticated,
+        "flash_message": flash_message
+    })
 
 
 @router.post("/movies/create/")
@@ -35,6 +43,7 @@ async def create(title: str = Form(...), year: int = Form(...), db: Session = De
     new_movie = Movie(title=title, year=year)
     db.add(new_movie)
     db.commit()
+    global_vars.message = '添加成功'
     # 使用重定向跳转回首页
     return RedirectResponse(url="/", status_code=303)
 
@@ -47,7 +56,11 @@ async def edit_movie_page(req: Request, movie_id: int, db: Session = Depends(get
     if not movie:
         raise HTTPException(status_code=404, detail="Movie not found")
 
-    return req.app.state.views.TemplateResponse("edit.html", {"request": req, "user": user, "movie": movie})
+    return req.app.state.views.TemplateResponse("edit.html", {
+        "request": req,
+        "user": user,
+        "movie": movie
+    })
 
 
 @router.post("/movies/{movie_id}/edit/")
@@ -61,7 +74,7 @@ async def edit(movie_id: int, title: str = Form(...), year: int = Form(...),
     movie.title = title
     movie.year = year
     db.commit()
-
+    global_vars.message = '编辑成功'
     # 使用重定向跳转回首页
     return RedirectResponse(url="/", status_code=303)
 
@@ -75,5 +88,6 @@ async def delete(movie_id: int, db: Session = Depends(get_db)):
 
     db.delete(movie)
     db.commit()
+    global_vars.message = '删除成功'
     # 使用重定向跳转回首页
     return RedirectResponse(url="/", status_code=303)
