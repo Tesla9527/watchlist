@@ -12,28 +12,28 @@ router = APIRouter()
 
 
 # 解密 JWT 令牌并获取用户数据
-def get_current_user_from_cookie(request: Request):
+def get_current_user_from_cookie(request: Request, db: Session = Depends(get_db)):
+    user = db.query(User).first()
     token = request.cookies.get("access_token")
     if token is None:
-        return False
-    user_data = decode_access_token(token)['name']
-    return True
+        return {'name': user.name, 'is_authenticated': False}
+    user_data = decode_access_token(token)
+    print(user_data)
+    if user_data['username'] == user.username:
+        return {'name': user.name, 'is_authenticated': True}
 
 
 @router.get("/", response_class=HTMLResponse)
 async def index(req: Request, current_user: dict = Depends(get_current_user_from_cookie)
                 , db: Session = Depends(get_db)):
-    is_authenticated = current_user
-
-    user = db.query(User).first()
     movies = db.query(Movie).all()
     flash_message = global_vars.message
     global_vars.message = ''
     return req.app.state.views.TemplateResponse("index.html", {
         "request": req,
-        "user": user,
+        "user": current_user,
+        "is_authenticated": current_user['is_authenticated'],
         "movies": movies,
-        "is_authenticated": is_authenticated,
         "flash_message": flash_message
     })
 
@@ -49,8 +49,8 @@ async def create(title: str = Form(...), year: int = Form(...), db: Session = De
 
 
 @router.get("/movies/{movie_id}/edit/", response_class=HTMLResponse)
-async def edit_movie_page(req: Request, movie_id: int, db: Session = Depends(get_db)):
-    user = db.query(User).first()
+async def edit_movie_page(req: Request, movie_id: int, current_user: dict = Depends(get_current_user_from_cookie),
+                          db: Session = Depends(get_db)):
     movie = db.query(Movie).filter(Movie.id == movie_id).first()
 
     if not movie:
@@ -58,14 +58,14 @@ async def edit_movie_page(req: Request, movie_id: int, db: Session = Depends(get
 
     return req.app.state.views.TemplateResponse("edit.html", {
         "request": req,
-        "user": user,
+        "user": current_user,
+        "is_authenticated": current_user['is_authenticated'],
         "movie": movie
     })
 
 
 @router.post("/movies/{movie_id}/edit/")
-async def edit(movie_id: int, title: str = Form(...), year: int = Form(...),
-               db: Session = Depends(get_db)):
+async def edit(movie_id: int, title: str = Form(...), year: int = Form(...), db: Session = Depends(get_db)):
     movie = db.query(Movie).filter(Movie.id == movie_id).first()
 
     if not movie:

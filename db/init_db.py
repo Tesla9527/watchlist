@@ -35,6 +35,7 @@ def insert_initial_data():
 
     user = User()
     user.name = 'admin'
+    user.username = 'admin'
     user.set_password('123456')
     db.add(user)
     db.commit()

@@ -1,12 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from core.config import settings
 from view.routers import view_router
-from core import events
-
+from core import events, exceptions
 
 # FastAPI实例
 app = FastAPI(
@@ -18,6 +17,11 @@ app = FastAPI(
 # 事件监听
 app.add_event_handler("startup", events.startup(app))
 app.add_event_handler("shutdown", events.stopping(app))
+
+# 异常错误处理
+app.add_exception_handler(404, exceptions.http_exception_handel)
+app.add_exception_handler(400, exceptions.http_exception_handel)
+app.add_exception_handler(500, exceptions.http_exception_handel)
 
 app.add_middleware(
     CORSMiddleware,

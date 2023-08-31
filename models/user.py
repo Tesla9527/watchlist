@@ -5,8 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(Base):
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(20))
-    username = Column(String(20))
+    name = Column(String(20))  # 展示用
+    username = Column(String(20))  # 账号
     password_hash = Column(String(128))
 
     def set_password(self, password):
